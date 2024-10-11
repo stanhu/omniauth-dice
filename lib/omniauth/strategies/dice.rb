@@ -1,5 +1,6 @@
 require 'faraday'
-require 'faraday_middleware'
+require 'faraday/xml'
+require 'multi_xml'
 require 'open-uri'
 require 'omniauth'
 require 'cert_munger'
@@ -310,7 +311,7 @@ module OmniAuth
           format = options.format
           conn.response(:xml,  content_type: /\bxml$/) if format == 'xml'
           conn.response(:json, content_type: /\bjson$/) if format == 'json'
-          conn.adapter :excon
+          conn.adapter :net_http
         end
       end
 
