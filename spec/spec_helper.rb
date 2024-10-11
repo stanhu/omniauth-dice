@@ -1,10 +1,9 @@
-require 'codeclimate-test-reporter'
-CodeClimate::TestReporter.start
 require 'rubygems'
 require 'bundler'
 Bundler.setup :default, :development, :test
 
 require 'capybara/rspec'
+require 'rack/session'
 require 'rack_session_access'
 require 'rack_session_access/capybara'
 require 'webmock/rspec'

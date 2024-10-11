@@ -1,5 +1,7 @@
 require 'spec_helper'
-require'dnc'
+require 'dnc'
+require 'rack'
+require 'securerandom'
 
 class MockDice; end
 describe OmniAuth::Strategies::Dice, type: :strategy do
@@ -60,7 +62,7 @@ describe OmniAuth::Strategies::Dice, type: :strategy do
     dice_options = {:model => MockDice}.merge(dice_options)
     old_app = self.app
     self.app = Rack::Builder.app do
-      use Rack::Session::Cookie, :secret => '1337geeks'
+      use Rack::Session::Cookie, :secret => SecureRandom.hex(64)
       use RackSessionAccess::Middleware
       use OmniAuth::Strategies::Dice, dice_options
       run lambda{|env| [404, {'env' => env}, ["HELLO!"]]}

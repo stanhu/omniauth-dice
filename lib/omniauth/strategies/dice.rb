@@ -4,6 +4,7 @@ require 'open-uri'
 require 'omniauth'
 require 'cert_munger'
 require 'dnc'
+require 'erb'
 
 class RequiredCustomParamError < StandardError; end
 
@@ -324,11 +325,13 @@ module OmniAuth
 
       # Build out the query URL for CAS server with DN params
       def query_url
-        user_dn      = env['omniauth.params']['user_dn']
-        build_query  = "#{options.cas_server}#{options.authentication_path}"
-        build_query += "/#{user_dn}"
-        build_query += "/#{options.return_field}.#{options.format}"
-        URI.encode(build_query)
+        user_dn = ERB::Util.url_encode(env['omniauth.params']['user_dn'])
+        return_field = ERB::Util.url_encode(options.return_field)
+        format = options.format
+
+        build_query = "#{options.cas_server}#{options.authentication_path}"
+        build_query += "/#{user_dn}/#{return_field}.#{format}"
+        build_query
       end
 
       # Detect data format, parse with appropriate library
